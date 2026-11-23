@@ -1,0 +1,30 @@
+# Maintainer: bullno1 <thebullno1 at gmail dot com>
+
+pkgname=xmemory-git
+pkgver=r1.0000000
+pkgrel=1
+pkgdesc="Automatically save and restore X11 window positions per program"
+arch=('x86_64')
+url="https://github.com/bullno1/xmemory"
+license=('unknown')
+depends=('glibc' 'libxcb' 'xcb-util-wm')
+makedepends=('git')
+provides=("${pkgname%-git}")
+conflicts=("${pkgname%-git}")
+source=("$pkgname::git+$url.git")
+sha256sums=('SKIP')
+
+pkgver() {
+	cd "$pkgname"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short=7 HEAD)"
+}
+
+build() {
+	cd "$pkgname"
+	make
+}
+
+package() {
+	cd "$pkgname"
+	make DESTDIR="$pkgdir" PREFIX=/usr install
+}
